@@ -24,34 +24,50 @@ Console.WriteLine($"Musiklistappen: börja med att få menyn att fungera!  (data
 
 DbHandler handler = new DbHandler(connectionString);
 
-Console.WriteLine("Välkommen, vad vill du se?");
-Console.WriteLine("Visa låtar/album");
-Console.WriteLine("Lägg till låt/album");
-Console.WriteLine("Ta bort en post");
-Console.WriteLine("Avsluta");
-
-int choice = Convert.ToInt32(Console.ReadLine());
-
-
-
+int choice = 0;
 
 while (choice != 4)
 {
 
-    Console.WriteLine("Visa låtar/album");
-    Console.WriteLine("Lägg till låt/album");
-    Console.WriteLine("Ta bort en post");
-    Console.WriteLine("Avsluta");
+    Console.WriteLine("Välkommen, vad vill du se?");
+    Console.WriteLine("1.Visa låtar/album");
+    Console.WriteLine("2.Lägg till låt/album");
+    Console.WriteLine("3.Ta bort en post");
+    Console.WriteLine("4.Avsluta");
+
+    choice = Convert.ToInt32(Console.ReadLine());
+
 
     switch (choice)
     {
         case 1:
             Console.WriteLine("Visar alla låtar/album");
+            var songs = handler.GetAllSongs();
+            foreach (var song in songs)
+            {
+                Console.WriteLine($"{song.Id}. {song.Name} ({song.PlayTime} sekunder)");
+            }
             break;
 
         case 2:
             Console.WriteLine("La till en ny låt eller album");
+            Console.Write("Namn: ");
+            string name = Console.ReadLine() ?? "";
+            Console.Write("playtime: ");
+            int playTime = Convert.ToInt32(Console.ReadLine());
+            Console.Write("Albumid: ");
+            int albumid = Convert.ToInt32(Console.ReadLine());
 
+            var newSong = new Song
+            {
+                Name = name,
+                PlayTime = playTime,
+                AlbumId = albumid
+
+            };
+
+            handler.AddSong(newSong);
+            Console.Write($"la till låten {name}");
             break;
 
         case 3:

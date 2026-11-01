@@ -47,10 +47,29 @@ public class DbHandler
     /// <summary>Hämtar alla låtar, sorterade på titel.</summary>
     public List<Song> GetAllSongs()
     {
-        // TODO: SELECT från din låt-tabell med ORDER BY.
-        // TODO: loopa med reader.Read() och gör ett Song-objekt av varje rad.
-        // Tips: reader.GetInt32(0), reader.GetString(1) ... eller reader["Titel"].
-        throw new NotImplementedException();
+        var songs = new List<Song>();
+
+        using var connection = new SqliteConnection(thisConnectionString);
+        connection.Open();
+
+        using var command = connection.CreateCommand();
+        command.CommandText = "SELECT songid, name, playTime, albumid FROM SONGS ORDER BY name";
+
+        using var reader = command.ExecuteReader();
+        while (reader.Read())
+        {
+            var song = new Song
+            {
+                Id = reader.GetInt32(0),
+                Name = reader.GetString(1),
+                PlayTime = reader.GetInt32(2),
+                AlbumId = reader.GetInt32(3)
+            };
+            songs.Add(song);
+        }
+
+        return songs;
+        //throw new NotImplementedException();
     }
 
     /// <summary>Hämtar en specifik låt. Returnerar null om den inte finns.</summary>
@@ -72,9 +91,21 @@ public class DbHandler
     /// <summary>Lägger till en ny låt.</summary>
     public void AddSong(Song song)
     {
+
+        using var connection = new SqliteConnection(thisConnectionString);
+        connection.Open();
+
+        using var command = connection.CreateCommand();
+        command.CommandText = "INSERT INTO SONGS (name, playTime, albumid) VALUES (@name, @playTime, @albumid)";
+
+        command.Parameters.AddWithValue("@name", song.Name);
+        command.Parameters.AddWithValue("@playTime", song.PlayTime);
+        command.Parameters.AddWithValue("@albumid", song.AlbumId);
+
+        command.ExecuteNonQuery();
         // TODO: INSERT INTO ... VALUES (@titel, @langd, ...) med parametrar.
         // Tips: INSERT ger ingen data tillbaka, så använd ExecuteNonQuery().
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     /// <summary>Tar bort en låt. Returnerar true om en rad faktiskt togs bort.</summary>
