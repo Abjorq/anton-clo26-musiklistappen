@@ -2,7 +2,7 @@ using Microsoft.Data.Sqlite;
 
 namespace MusikApp;
 
-/// <summary>
+///<summary>
 /// ALL databaskod bor här. Program.cs ska aldrig innehålla SQL eller SqliteConnection.
 ///
 /// Det här är ett skelett: metoderna finns, kommentarerna visar vad varje metod ska göra,
@@ -17,17 +17,27 @@ namespace MusikApp;
 ///
 /// Använd "using var" på anslutning och kommando så stängs de av sig själva.
 /// Bygg SQL:en med parametrar (@titel), aldrig genom att klistra ihop strängar.
-/// </summary>
+/// 
+/// 
+///</summary>
+
+
 public class DbHandler
 {
+
+    private readonly string thisConnectionString;
+
     // Tips: spara bara connection string här. Den kommer från appsettings.json
     // via Program.cs (t.ex. "Data Source=musik.db").
     // Öppna sedan en NY anslutning inuti varje metod nedan.
 
     public DbHandler(string connectionString)
     {
+
+        thisConnectionString = connectionString;
+
         // TODO: spara connectionString i ett fält som metoderna nedan kan använda.
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     // ---------------------------------------------------------------
