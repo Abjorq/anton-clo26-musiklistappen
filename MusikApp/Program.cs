@@ -13,7 +13,6 @@ var connectionString = config.GetConnectionString("Default")
     ?? throw new InvalidOperationException("Hittar ingen connection string 'Default' i appsettings.json.");
 
 // Börja här. Den här raden visar att inställningarna lästes in, ta bort den när du vill.
-Console.WriteLine($"Musiklistappen: börja med att få menyn att fungera!  (databas: {connectionString})");
 
 // Tips på ordning (se UPPGIFT.md):
 //   1. Rita upp huvudmenyn (alternativ numrerade 1-N) och läs in ett val med Console.ReadLine().
@@ -50,7 +49,7 @@ while (choice != 4)
             break;
 
         case 2:
-            Console.WriteLine("La till en ny låt eller album");
+            Console.WriteLine("Lägg till en ny låt eller album");
             Console.Write("Namn: ");
             string name = Console.ReadLine() ?? "";
             Console.Write("playtime: ");
@@ -71,7 +70,35 @@ while (choice != 4)
             break;
 
         case 3:
-            Console.WriteLine("Tog bort en post");
+            Console.WriteLine("Ta bort en post");
+            var allSongs = handler.GetAllSongs();
+            foreach (var s in allSongs)
+            {
+                Console.WriteLine($"{s.Id}. {s.Name}");
+            }
+
+            Console.Write("Id på låten som ska tas bort: ");
+            int deleteId = Convert.ToInt32(Console.ReadLine());
+
+            Console.Write("Är du säker? (ja/nej): ");
+            string answer = Console.ReadLine() ?? "";
+
+            if (answer.ToLower() == "ja")
+            {
+                bool deleted = handler.DeleteSong(deleteId);
+                if (deleted)
+                {
+                    Console.WriteLine("Låten togs bort.");
+                }
+                else
+                {
+                    Console.WriteLine("Hittade ingen låt med det id:t.");
+                }
+            }
+            else
+            {
+                Console.WriteLine("Avbröt.");
+            }
             break;
 
         case 4:

@@ -111,10 +111,25 @@ public class DbHandler
     /// <summary>Tar bort en låt. Returnerar true om en rad faktiskt togs bort.</summary>
     public bool DeleteSong(int id)
     {
+
+        using var connection = new SqliteConnection(thisConnectionString);
+        connection.Open();
+
+        using var deleteLinks = connection.CreateCommand();
+        deleteLinks.CommandText = "DELETE FROM SONG_CONTRIBUTORS WHERE songid = @id";
+        deleteLinks.Parameters.AddWithValue("@id", id);
+        deleteLinks.ExecuteNonQuery();
+
+        using var deleteSong = connection.CreateCommand();
+        deleteSong.CommandText = "DELETE FROM SONGS WHERE songid = @id";
+        deleteSong.Parameters.AddWithValue("@id", id);
+        int rowsAffected = deleteSong.ExecuteNonQuery();
+
+        return rowsAffected > 0;
         // TODO: DELETE FROM ... WHERE Id = @id.
         // Tips: ExecuteNonQuery() returnerar antalet påverkade rader.
         // Menyn i Program.cs ska fråga "Är du säker? j/n" innan den här metoden anropas.
-        throw new NotImplementedException();
+        //throw new NotImplementedException();
     }
 
     // ---------------------------------------------------------------
